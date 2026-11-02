@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foco & Rota</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <h1>Foco &amp; Rota</h1>
+      <div>
+        <button id="btn-tema" type="button" aria-label="Alternar tema">◐</button>
+        <button id="btn-sair" class="so-logado" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+    <p id="aviso" role="alert" aria-live="polite"></p>
+
+    <section id="tela-entrar" class="card">
+      <h2>Entrar ou criar conta</h2>
+      <div class="login-abas" role="tablist" aria-label="Opções de acesso">
+        <button id="abaEntrar" class="aba ativa" type="button" role="tab" aria-selected="true">Entrar</button>
+        <button id="abaCriar" class="aba" type="button" role="tab" aria-selected="false">Criar conta</button>
+      </div>
+
+      <div id="formEntrar" role="tabpanel">
+        <form id="formLogin" class="form">
+          <label for="emailLogin">E-mail</label>
+          <input id="emailLogin" name="email" type="email" autocomplete="email" required>
+
+          <label for="senhaLogin">Senha</label>
+          <input id="senhaLogin" name="senha" type="password" autocomplete="current-password" minlength="6" required>
+
+          <button class="primary" type="submit">Entrar</button>
+        </form>
+      </div>
+
+      <div id="formCriar" role="tabpanel" hidden>
+        <form id="formCadastro" class="form">
+          <label for="emailCriar">E-mail</label>
+          <input id="emailCriar" name="email" type="email" autocomplete="email" required>
+
+          <label for="senhaCriar">Senha</label>
+          <input id="senhaCriar" name="senha" type="password" autocomplete="new-password" minlength="6" required>
+
+          <label for="confirmarSenha">Confirmar senha</label>
+          <input id="confirmarSenha" name="confirmar" type="password" autocomplete="new-password" minlength="6" required>
+
+          <button class="primary" type="submit">Criar minha conta</button>
+        </form>
+      </div>
+
+      <p id="msg" class="aviso-login" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section id="tela-inicio" class="tela card" hidden>
+      <h2>Início</h2>
+      <div class="frase" id="frase"></div>
+      <div class="grid">
+        <div class="stat"><strong id="resumo-pomodoros">0</strong>Pomodoros</div>
+        <div class="stat"><strong id="resumo-minutos">0</strong>Minutos</div>
+      </div>
+    </section>
+
+    <section id="tela-estudar" class="tela card" hidden>
+      <h2>Estudar</h2>
+      <form class="form" id="formEstudo">
+        <label for="materia">Matéria</label>
+        <select id="materia" name="materia">
+          <option value="">Sem matéria</option>
+        </select>
+
+        <div class="timer" id="tempo">25:00</div>
+
+        <div class="row">
+          <button class="primary" id="iniciar" type="button">Iniciar</button>
+          <button id="pular" type="button">Pular</button>
+        </div>
+
+        <label for="ajuste">Minutos de foco: <b id="min">25</b></label>
+        <input id="ajuste" type="range" min="5" max="90" step="5" value="25">
+      </form>
+    </section>
+
+    <section id="tela-materias" class="tela card" hidden>
+      <h2>Matérias</h2>
+      <form class="form" id="novaMateria">
+        <label for="nomeMateria">Nome da matéria</label>
+        <input id="nomeMateria" name="nome" required placeholder="Nome da matéria">
+
+        <label for="corMateria">Cor da matéria</label>
+        <input id="corMateria" name="cor" type="color" value="#3b82f6">
+
+        <button class="primary" type="submit">Adicionar matéria</button>
+      </form>
+      <div id="lista"></div>
+    </section>
+
+    <section id="tela-anotacoes" class="tela card" hidden>
+      <h2>Anotações</h2>
+      <form class="form" id="novaNota">
+        <label for="tituloNota">Título</label>
+        <input id="tituloNota" name="titulo" required placeholder="Título">
+
+        <label for="materiaNota">Matéria</label>
+        <select id="materiaNota" name="materia">
+          <option value="">Sem matéria</option>
+        </select>
+
+        <label for="textoNota">Anotação</label>
+        <textarea id="textoNota" name="texto" rows="5" required placeholder="Escreva sua anotação"></textarea>
+
+        <button class="primary" type="submit">Salvar nota</button>
+      </form>
+      <div id="listaNotas"></div>
+    </section>
+  </main>
+
+  <script src="dados.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
