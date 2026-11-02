@@ -49,7 +49,19 @@ async function planoTela(){
  const concluidos=blocos.filter(bloco=>bloco.feito).length;
  const progresso=blocos.length?Math.round(concluidos/blocos.length*100):0;
  await base(`<div class="card"><h2>Plano semanal</h2><p class="muted">Organize o que você vai estudar em cada dia da semana.</p><div class="progresso"><span style="width:${progresso}%"></span></div><p>${concluidos} de ${blocos.length} blocos concluídos nesta semana.</p><form class="form plano-form" id="novoBloco"><label for="diaPlano">Dia da semana</label><select id="diaPlano" name="dia">${dias.map((dia,index)=>`<option value="${index}" ${index===hoje?"selected":""}>${dia}</option>`).join("")}</select><label for="materiaPlano">Matéria</label><select id="materiaPlano" name="materia"><option value="">Sem matéria</option>${materias.map(m=>`<option value="${m.id}">${esc(m.nome)}</option>`).join("")}</select><label for="minutosPlano">Minutos</label><input id="minutosPlano" name="minutos" type="number" min="5" max="240" step="5" value="30"><label for="observacaoPlano">Observação</label><input id="observacaoPlano" name="observacao" maxlength="120" placeholder="Ex.: revisar exercícios"><button class="primary" type="submit">Adicionar bloco</button></form></div><div class="plano-semana">${dias.map((dia,index)=>{const blocosDia=blocos.filter(bloco=>bloco.dia===index);return `<section class="card plano-dia ${index===hoje?"hoje":""}"><h3>${dia}${index===hoje?' <span class="hoje-label">Hoje</span>':""}</h3>${blocosDia.map(bloco=>{const materia=materias.find(item=>item.id===bloco.materia_id);return `<div class="plano-bloco ${bloco.feito?"feito":""}" data-dia="${index}"><div><b>${esc(materia?.nome||"Sem matéria")}</b><br><span>${bloco.minutos} minutos${bloco.observacao?` · ${esc(bloco.observacao)}`:""}</span></div><div class="plano-acoes"><button data-feito="${bloco.id}" data-valor="${!bloco.feito}" class="${bloco.feito?"":"primary"}">${bloco.feito?"Desfazer":"Feito"}</button><button class="danger" data-apagar-plano="${bloco.id}">Excluir</button></div></div>`}).join("")||'<p class="muted">Nenhum bloco neste dia.</p>'}</section>`}).join("")}</div>`);
- novoBloco.onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);await api("plano_criar",{dia:Number(f.get("dia")),materia_id:f.get("materia")||null,minutos:Number(f.get("minutos")),observacao:f.get("observacao").trim()});planoTela()};
+ novoBloco.onsubmit=async e=>{
+  e.preventDefault();
+  const botao=e.submitter;
+  botao.disabled=true;
+  try{
+   const f=new FormData(e.target);
+   await api("plano_criar",{dia:Number(f.get("dia")),materia_id:f.get("materia")||null,minutos:Number(f.get("minutos")),observacao:f.get("observacao").trim()});
+   planoTela();
+  }catch(erro){
+   alert(`Não foi possível adicionar o bloco: ${erro.message}`);
+   botao.disabled=false;
+  }
+ };
  document.querySelectorAll("[data-feito]").forEach(botao=>botao.onclick=async()=>{await api("plano_marcar",{id:botao.dataset.feito,feito:botao.dataset.valor==="true"});planoTela()});
  document.querySelectorAll("[data-apagar-plano]").forEach(botao=>botao.onclick=async()=>{if(confirm("Excluir este bloco do plano?")){await api("plano_excluir",{id:botao.dataset.apagarPlano});planoTela()}});
 }
