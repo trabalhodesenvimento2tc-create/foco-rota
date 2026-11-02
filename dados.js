@@ -43,6 +43,10 @@ async function api(acao, dados = {}) {
       case "materias_listar": return (await sb.from("materias").select("*").order("created_at")).data || [];
       case "materias_criar": { const r=await sb.from("materias").insert({...uid,nome:dados.nome,cor:dados.cor||"#3b82f6"}).select(); if(r.error)throw r.error; return r.data; }
       case "materias_excluir": await sb.from("materias").delete().eq("id",dados.id); return {ok:true};
+      case "plano_listar": return (await sb.from("plano_estudos").select("*").order("dia")).data || [];
+      case "plano_criar": { const r=await sb.from("plano_estudos").insert({...uid,dia:dados.dia,materia_id:dados.materia_id,minutos:dados.minutos,observacao:dados.observacao||null}).select(); if(r.error)throw r.error; return r.data; }
+      case "plano_marcar": { const r=await sb.from("plano_estudos").update({feito:dados.feito}).eq("id",dados.id).eq("user_id",user.id); if(r.error)throw r.error; return {ok:true}; }
+      case "plano_excluir": await sb.from("plano_estudos").delete().eq("id",dados.id).eq("user_id",user.id); return {ok:true};
       case "sessao_salvar": { const r=await sb.from("sessoes").insert({...uid,minutos:dados.minutos,materia_id:dados.materia_id||null}); if(r.error)throw r.error; return r.data; }
       case "resumo": { const sessoes=(await sb.from("sessoes").select("minutos")).data||[]; return {pomodoros:sessoes.length,minutos:sessoes.reduce((n,s)=>n+s.minutos,0)}; }
       case "frase": { const {data}=await sb.from("frases").select("texto").limit(20); return {texto:data?.[(new Date()).getDate()% (data.length||1)]?.texto||"Um passo de cada vez."}; }

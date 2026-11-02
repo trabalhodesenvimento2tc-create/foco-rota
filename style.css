@@ -120,7 +120,7 @@ h1, h2, h3 {
   left: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 4px;
   padding: 7px 12px;
   border-top: 1px solid var(--line);
@@ -188,6 +188,15 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 }
 
 .item { border-left: 4px solid var(--primary); }
+.plano-semana { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.plano-dia { margin: 0; }
+.plano-dia.hoje { border-color: var(--primary); }
+.hoje-label { color: var(--primary); font-size: 12px; }
+.plano-bloco { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.plano-bloco.feito { opacity: .65; text-decoration: line-through; }
+.plano-acoes { display: flex; gap: 6px; flex-shrink: 0; }
+.progresso { height: 12px; overflow: hidden; border-radius: 999px; background: var(--card-soft); }
+.progresso span { display: block; height: 100%; border-radius: inherit; background: var(--primary); }
 
 .muted { color: var(--muted); }
 .success { color: var(--success); }
@@ -238,4 +247,8 @@ summary { min-height: 44px; cursor: pointer; }
   .grid { grid-template-columns: 1fr; }
   .nav { font-size: 11px; padding-inline: 4px; }
   .row { flex-wrap: wrap; }
+  .plano-semana { grid-template-columns: 1fr; }
+  .plano-bloco { align-items: stretch; flex-direction: column; }
+  .plano-acoes { width: 100%; }
+  .plano-acoes button { flex: 1; }
 }
